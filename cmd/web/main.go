@@ -2,22 +2,22 @@ package main
 
 import (
 	"flag"
-	"log"
+	"log/slog"
 	"net/http"
+	"os"
 )
 
-func main() {
-	// Define a new command-line flag with the name 'addr', a default vaue of ":4000"
-	// and some short help text explaning what the flag controls. The value os the
-	// flag will be stored in the addr variable at runtime.
-	addr := flag.String("addr", ":4000", "HTTP network address")
+// Define an application struct to hold the application-wide dependencies for the
+// web application. For now we'll only include the structured logger, but we'll
+// add more to this as development progresses.
+type application struct {
+	logger *slog.Logger
+}
 
-	// Importantly, we use the flag.Parse() function to parse the comand-line flag.
-	// This reads in the command-line flag value and assgns it to the addr
-	// variable. You need to call this *before* you use the addr variable
-	// otherwise it will always contain the default value of ":4000". If any errors are
-	// encountered during parsing the application will be terminated.
+func main() {
+	addr := flag.String("addr", ":4000", "HTTP network address")
 	flag.Parse()
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
 	mux := http.NewServeMux()
 
@@ -29,14 +29,9 @@ func main() {
 	mux.HandleFunc("GET /snippet/create", snippetCreate)
 	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
-	// The value returned from the flag.String() function is a pointer to the flag
-	// value, not the value itself. So in this code, that means the addr variable
-	// is actually a pointer, and we need to deference it (i.e. prefix it with
-	// the * symbol) before using it. Note tha we're using the log.Printf()
-	// function to interpolate the address with the log message.
-	log.Print("stating server on %s", *addr)
+	logger.Info("starting server", "addr", *addr)
 
-	// And we pass the deferenced addr pointer to http.ListenAndServe() too.
 	err := http.ListenAndServe(*addr, mux)
-	log.Fatal(err)
+	logger.Error(err.Error())
+	os.Exit(1)
 }
