@@ -26,9 +26,9 @@ Ao longo do desenvolvimento serão abordados diversos conceitos importantes do e
 ## 📖 Progresso
 
 * [x] Capítulo 1 — Introdução
-* [ ] Capítulo 2
-* [ ] Capítulo 3
-* [ ] Capítulo 4
+* [x] Capítulo 2
+* [x] Capítulo 3
+* [x] Capítulo 4
 * [ ] Capítulo 5
 * [ ] ...
 
