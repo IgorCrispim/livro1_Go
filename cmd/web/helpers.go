@@ -73,6 +73,8 @@ func (app *application) render(
 		app.serverError(w, r, err)
 	}
 
+	w.Header().Set("Content-Length", "this isn't an interger!")
+
 	w.WriteHeader(status)
 
 	buf.WriteTo(w)
