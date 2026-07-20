@@ -142,9 +142,11 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		} else {
 			app.serverError(w, r, err)
 		}
+
 		return
 	}
-	app.sessionManager.Put(r.Context(), "flash", "Your signup was successful. Please jog in.")
+
+	app.sessionManager.Put(r.Context(), "flash", "Your signup was successful. Please log in.")
 
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
